@@ -1,0 +1,470 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #2a2a3a;
+    --text: #d0d0d0;
+    --text-dim: #707080;
+    --accent: #f0f0f0;
+    --danger: #ff4444;
+    --success: #44ff44;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 20px 16px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    color: var(--accent);
+}
+
+.subtitle {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    text-align: center;
+}
+
+/* --- ЭКРАН АРХЕТИПОВ --- */
+.archetype-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.archetype-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.25s, background 0.25s, transform 0.15s;
+    color: var(--text);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.archetype-btn:hover,
+.archetype-btn:active {
+    border-color: var(--accent);
+    background: #1a1a28;
+    transform: translateY(-2px);
+}
+
+.archetype-btn.selected {
+    border-color: var(--accent);
+    background: #1e1e30;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.archetype-icon {
+    width: 70px;
+    height: 70px;
+    color: var(--accent);
+}
+
+.archetype-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.archetype-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+/* --- ЭКРАН СТАТОВ --- */
+.form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+#hero-name {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--accent);
+    font-size: 1.1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+#hero-name:focus {
+    border-color: var(--accent);
+}
+
+#hero-name::placeholder {
+    color: #404050;
+}
+
+.points-left {
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.points-left span {
+    color: var(--accent);
+    font-size: 1.3rem;
+}
+
+.stats-sliders {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-row label {
+    width: 80px;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+.stat-row input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.stat-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.stat-row input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(1.2);
+}
+
+.stat-value {
+    width: 24px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--accent);
+}
+
+#radar-preview {
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+.primary-btn {
+    background: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 14px 40px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    width: 100%;
+    max-width: 320px;
+    text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.primary-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--bg);
+}
+
+.primary-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* --- ЭКРАН КВИЗА --- */
+.quiz-header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.quiz-progress {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-align: center;
+}
+
+.quiz-timer-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.quiz-timer-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 100%;
+    border-radius: 3px;
+    transition: width 0.1s linear;
+}
+
+.quiz-timer-fill.warning {
+    background: var(--danger);
+}
+
+.quiz-question {
+    font-size: 1.15rem;
+    text-align: center;
+    line-height: 1.5;
+    padding: 5px 0;
+}
+
+.quiz-answers {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quiz-answer-btn {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-size: 0.95rem;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.quiz-answer-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #1a1a28;
+}
+
+.quiz-answer-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.quiz-answer-btn.correct {
+    border-color: var(--success);
+    background: rgba(68, 255, 68, 0.08);
+}
+
+.quiz-answer-btn.wrong {
+    border-color: var(--danger);
+    background: rgba(255, 68, 68, 0.08);
+}
+
+.quiz-feedback {
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 28px;
+    text-align: center;
+}
+
+/* --- ЭКРАН КАРТОЧКИ --- */
+.hero-card {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.hero-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#card-archetype-icon {
+    width: 32px;
+    height: 32px;
+}
+
+#card-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.hero-card-stats {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hero-stat-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+}
+
+.hero-stat-bar span {
+    width: 70px;
+    color: var(--text-dim);
+}
+
+.bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.quiz-result {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+}
+
+.quiz-result span {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.qr-code {
+    background: white;
+    padding: 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qr-code canvas,
+.qr-code img {
+    display: block;
+    width: 180px;
+    height: 180px;
+}
+
+.qr-hint {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-align: center;
+}
+
+/* --- АНИМАЦИИ --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.screen.active {
+    animation: fadeIn 0.35s ease;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.quiz-feedback.show {
+    animation: pulse 0.5s ease 3;
+}
+
+/* Адаптив для очень маленьких экранов */
+@media (max-width: 350px) {
+    .archetype-grid {
+        gap: 8px;
+    }
+    .archetype-btn {
+        padding: 14px 6px;
+    }
+    .archetype-icon {
+        width: 50px;
+        height: 50px;
+    }
+    .title {
+        font-size: 1.3rem;
+    }
+}
