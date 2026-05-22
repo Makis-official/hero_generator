@@ -220,13 +220,16 @@ function showQuestion() {
     if (state.quizIndex >= TOTAL_QUESTIONS) { showScreen('distribute'); return; }
     state.quizAnswered = false;
     clearTimeout(state.quizTimer);
+
     const q = questions[state.quizIndex % questions.length];
     document.getElementById('quiz-current').textContent = state.quizIndex + 1;
     document.getElementById('quiz-question').textContent = q.text;
     document.getElementById('quiz-feedback').textContent = '';
     document.getElementById('quiz-feedback').classList.remove('show');
+
     const answersDiv = document.getElementById('quiz-answers');
     answersDiv.innerHTML = '';
+
     q.answers.forEach((answer, i) => {
         const btn = document.createElement('button');
         btn.className = 'quiz-answer-btn';
@@ -234,10 +237,12 @@ function showQuestion() {
         btn.addEventListener('click', () => onAnswer(i, q.correct));
         answersDiv.appendChild(btn);
     });
+
     let timeLeft = QUESTION_TIME;
     const timerFill = document.getElementById('quiz-timer-fill');
     timerFill.style.width = '100%';
     timerFill.classList.remove('warning');
+
     state.quizTimer = setInterval(() => {
         timeLeft--;
         timerFill.style.width = (timeLeft / QUESTION_TIME) * 100 + '%';
