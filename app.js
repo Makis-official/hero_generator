@@ -371,18 +371,40 @@ function generateQR() {
     const container = document.getElementById('qr-code');
     container.innerHTML = '';
 
-    // Супер-сжатый формат: массив без ключей
-    // [имя, архетип(m/w/i), сила, ловкость, интеллект, ответы]
-    const data = [
-        state.name.substring(0, 6),      // 0: name
-        state.archetype[0],               // 1: archetype
-        state.stats.strength,             // 2: strength
-        state.stats.agility,              // 3: agility
-        state.stats.intelligence,         // 4: intelligence
-        state.correctAnswers              // 5: correctAnswers
-    ];
+    // Транслитерация: русские буквы → латиница
+    const translitMap = {
+        'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z',
+        'и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p',
+        'р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch',
+        'ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya',
+        'А':'A','Б':'B','В':'V','Г':'G','Д':'D','Е':'E','Ё':'Yo','Ж':'Zh',
+        'З':'Z','И':'I','Й':'Y','К':'K','Л':'L','М':'M','Н':'N','О':'O',
+        'П':'P','Р':'R','С':'S','Т':'T','У':'U','Ф':'F','Х':'H','Ц':'Ts',
+        'Ч':'Ch','Ш':'Sh','Щ':'Sch','Ъ':'','Ы':'Y','Ь':'','Э':'E','Ю':'Yu','Я':'Ya'
+    };
+    
+    // Переводим имя в латиницу
+    let latinName = '';
+    for (let char of state.name) {
+        latinName += translitMap[char] || char;
+    }
+    // Удаляем спецсимволы и обрезаем до 8 символов
+    latinName = latinName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 8);
+    
+    // Если имя пустое — используем архетип + число ответов
+    if (latinName.length === 0) {
+        latinName = state.archetype[0] + state.correctAnswers;
+    }
 
-    const text = JSON.stringify(data);
+    const text = [
+        latinName,
+        state.archetype[0],
+        state.stats.strength,
+        state.stats.agility,
+        state.stats.intelligence,
+        state.correctAnswers
+    ].join('|');
+
     console.log('QR data:', text, 'length:', text.length);
 
     try {
@@ -395,35 +417,8 @@ function generateQR() {
             correctLevel: QRCode.CorrectLevel.L,
         });
     } catch (e) {
-        // Обрезаем имя до 3 букв
-        data[0] = state.name.substring(0, 3);
-        try {
-            container.innerHTML = '';
-            new QRCode(container, {
-                text: JSON.stringify(data),
-                width: 200,
-                height: 200,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.L,
-            });
-        } catch (e2) {
-            // Обрезаем имя до 1 буквы
-            data[0] = state.name.substring(0, 1);
-            try {
-                container.innerHTML = '';
-                new QRCode(container, {
-                    text: JSON.stringify(data),
-                    width: 200,
-                    height: 200,
-                    colorDark: '#000000',
-                    colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.L,
-                });
-            } catch (e3) {
-                container.innerHTML = '<p style="color:#ff4444;">Имя слишком длинное</p>';
-            }
-        }
+        console.error('QR error:', e);
+        container.innerHTML = '<p style="color:#ff4444;text-align:center;padding:20px;">Ошибка создания QR</p>';
     }
 }
 
