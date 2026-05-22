@@ -371,7 +371,7 @@ function generateQR() {
     const container = document.getElementById('qr-code');
     container.innerHTML = '';
 
-    // Транслитерация: русские буквы → латиница
+    // Транслитерация русских букв
     const translitMap = {
         'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z',
         'и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p',
@@ -383,28 +383,26 @@ function generateQR() {
         'Ч':'Ch','Ш':'Sh','Щ':'Sch','Ъ':'','Ы':'Y','Ь':'','Э':'E','Ю':'Yu','Я':'Ya'
     };
     
-    // Переводим имя в латиницу
     let latinName = '';
     for (let char of state.name) {
         latinName += translitMap[char] || char;
     }
-    // Удаляем спецсимволы и обрезаем до 8 символов
-    latinName = latinName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 8);
+    latinName = latinName.replace(/[^a-zA-Z0-9]/g, '').substring(0, 10);
     
-    // Если имя пустое — используем архетип + число ответов
     if (latinName.length === 0) {
         latinName = state.archetype[0] + state.correctAnswers;
     }
 
-    const text = [
+    const data = [
         latinName,
         state.archetype[0],
         state.stats.strength,
         state.stats.agility,
         state.stats.intelligence,
         state.correctAnswers
-    ].join('|');
+    ];
 
+    const text = JSON.stringify(data);
     console.log('QR data:', text, 'length:', text.length);
 
     try {
@@ -417,8 +415,33 @@ function generateQR() {
             correctLevel: QRCode.CorrectLevel.L,
         });
     } catch (e) {
-        console.error('QR error:', e);
-        container.innerHTML = '<p style="color:#ff4444;text-align:center;padding:20px;">Ошибка создания QR</p>';
+        data[0] = latinName.substring(0, 5);
+        try {
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: JSON.stringify(data),
+                width: 200,
+                height: 200,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.L,
+            });
+        } catch (e2) {
+            data[0] = latinName.substring(0, 3);
+            try {
+                container.innerHTML = '';
+                new QRCode(container, {
+                    text: JSON.stringify(data),
+                    width: 200,
+                    height: 200,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.L,
+                });
+            } catch (e3) {
+                container.innerHTML = '<p style="color:#ff4444;text-align:center;">Имя слишком длинное</p>';
+            }
+        }
     }
 }
 
